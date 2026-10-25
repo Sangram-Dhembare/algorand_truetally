@@ -33,5 +33,5 @@ This repository currently contains the project definition. The smart contract, d
 
 ## Limits and safety
 
-TrueTally is an educational prototype, not a system for real elections. A public ledger does not provide ballot secrecy: transaction details and wallet activity may be visible, and linking a wallet to a person can reveal how they voted. The design also depends on correct voter registration, asset controls, contract logic, and election administration. Atomic groups prevent partial execution; they do not by themselves establish voter identity, prevent coercion, or prove an election was administered fairly.
+TrueTally is not a system for real elections. A public ledger does not provide ballot secrecy: transaction details and wallet activity may be visible, and linking a wallet to a person can reveal how they voted. The design also depends on correct voter registration, asset controls, contract logic, and election administration. Atomic groups prevent partial execution; they do not by themselves establish voter identity, prevent coercion, or prove an election was administered fairly.
 
