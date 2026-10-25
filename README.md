@@ -1,35 +1,37 @@
 # TrueTally
 
-TrueTally is a course project exploring how Algorand can provide a public
-record of election setup and published results. The first version will let an
-administrator register an election, lock its configuration, and later publish
-a digest of the final tally. Anyone will be able to compare those records
-with the data published off-chain.
+TrueTally is a proposed campus voting dApp built around Algorand Standard Assets (ASAs). The project will explore whether a blockchain-based workflow can make vote submission and tally updates easier to verify after a poll.
 
-The ledger will store digests, not ballots or voter information. A recorded
-digest can show that data has not changed since it was submitted. It cannot
-prove that an election was run correctly or that a tally is accurate.
+## How it is intended to work
+
+An election administrator registers an election, its candidates, and the eligible voters. Each eligible voter receives one election-specific voting asset. A voter submits a ballot by transferring that asset to the wallet assigned to their chosen candidate.
+
+The vote transaction is intended to be an Algorand atomic group containing both the asset transfer and an application call. The smart contract will validate the election state and voter eligibility, then update the on-chain tally. If any transaction in the group fails validation, the group fails as a whole, so the asset transfer and tally update cannot succeed separately.
+
+The ASA's transfer controls still need careful design. Algorand assets are not inherently non-transferable. The prototype will need to restrict or mediate transfers, for example through the asset's freeze and clawback controls and contract checks, so a voting asset cannot be reused or moved outside the voting flow.
+
+## Planned stack
+
+- Algorand smart contracts written in Python with AlgoKit and the Algorand Python SDK.
+- LocalNet for development and automated tests; TestNet for a public test deployment.
+- A lightweight web client using the Algorand JavaScript SDK.
+- Pera Wallet connection through WalletConnect for wallet authentication and transaction signing.
+
+LocalNet is intended for fee-free development. TestNet transactions use test ALGO and are not mainnet transactions.
 
 ## Planned milestones
 
-1. Define the election configuration and result formats, including how their
-   digests are calculated.
-2. Build an Algorand smart contract for registering an election, locking its
-   configuration, and recording a final result digest.
-3. Test permitted state changes, rejected updates, and administrator access.
-4. Add a client and deployment instructions after the contract behavior is
-   covered by tests.
+1. Specify election, candidate, and voter state, including asset transfer restrictions and tally rules.
+2. Implement the contract and atomic-group validation for casting a vote.
+3. Test voter eligibility, one-vote enforcement, rejected transfers, election closure, and tally consistency on LocalNet.
+4. Add deployment scripts and test the flow on TestNet.
+5. Build the web client and connect Pera Wallet for transaction signing.
 
 ## Current status
 
-This repository contains the initial project definition. Contract code,
-deployment scripts, and a client have not been added. No election data has
-been submitted or deployed.
+This repository currently contains the project definition. The smart contract, deployment scripts, and web client have not been implemented. No election has been created and no votes have been cast.
 
-## Scope and limits
+## Limits and safety
 
-TrueTally is an educational prototype. It will not collect votes or personal
-information. The project does not provide voter authentication, eligibility
-checks, ballot secrecy, or a way to verify the correctness of a tally.
-Recording a digest on Algorand does not make an election secure or suitable
-for real-world use.
+TrueTally is an educational prototype, not a system for real elections. A public ledger does not provide ballot secrecy: transaction details and wallet activity may be visible, and linking a wallet to a person can reveal how they voted. The design also depends on correct voter registration, asset controls, contract logic, and election administration. Atomic groups prevent partial execution; they do not by themselves establish voter identity, prevent coercion, or prove an election was administered fairly.
+
